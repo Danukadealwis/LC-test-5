@@ -1,8 +1,10 @@
-#include "large-numbers.hpp"
+#include "LargeNumbers.hpp"
 
 using namespace std;
+using namespace LargeNumbers;
 
-InputStatus GetInputNumber(unsigned int &input_number){
+
+InputStatus LargeNumberCalculator::GetInputNumber(unsigned int &input_number){
     char user_input[USER_INPUT_SIZE];
     cin.getline(user_input, USER_INPUT_SIZE);
     auto input_1 = strtok(user_input, " ");
@@ -13,7 +15,7 @@ InputStatus GetInputNumber(unsigned int &input_number){
     if (input_2){
         return InputStatus::MULTIPLE_INPUTS;
     }
-    for(int i = 0; i < strlen(input_1); ++i) {
+    for(auto i = 0; i < (int)strlen(input_1); ++i) {
         auto current_char = input_1[i];
         if(!isdigit(current_char))
             return InputStatus::INVALID_INPUT;
@@ -27,7 +29,7 @@ InputStatus GetInputNumber(unsigned int &input_number){
     return InputStatus::VALID;
 }
 
-void DisplayMessage(InputStatus input_status){
+void LargeNumberCalculator::DisplayMessage(InputStatus input_status){
     switch(input_status){
         case InputStatus::INVALID_INPUT:
             cout << "Number is invalid" << endl;
@@ -44,7 +46,7 @@ void DisplayMessage(InputStatus input_status){
     cout << "Enter a number (0-99999): ";
 }
 
-unsigned int GetReverseNumber(unsigned int number){
+unsigned int LargeNumberCalculator::GetReverseNumber(unsigned int number){
     unsigned int reversed_number = 0, remainder;
 
     while(number != 0) {
@@ -56,12 +58,11 @@ unsigned int GetReverseNumber(unsigned int number){
     return reversed_number;
 }
 
-string AddStrings(string addend_1, string addend_2){
+string LargeNumberCalculator::AddStrings(string addend_1, string addend_2){
     string output;
     unsigned int carry = 0;
-    int i;
     const auto str_len = addend_1.length() > addend_2.length() ? (int)addend_2.length() : (int)addend_1.length();
-    for(i = str_len - 1; i <= 0; i--){
+    for(auto i = str_len - 1; i <= 0; i--){
         auto res = (addend_1[i] - '0') + (addend_2[i] - '0') + carry;
         carry = res/10;
         auto unit = to_string(res%10);
@@ -71,15 +72,16 @@ string AddStrings(string addend_1, string addend_2){
         output.insert(0, to_string(carry + (addend_1[0] - '0')));
     else
         output.insert(0, to_string(carry));
+    return output;
 }
 
-string MultiplyStrings(string val_str, string multiplier_str){
+string LargeNumberCalculator::MultiplyStrings(string val_str, string multiplier_str){
     string partial_product_str;
     unsigned int res,unit,carry = 0;
     string output("0");
-    int i,j;
-    for(i = (int)multiplier_str.length() - 1; i <=0; i--){
-        for(j= (int)multiplier_str.length() - 1; j <=0 ; j--){
+
+    for(auto i = (int)multiplier_str.length() - 1; i >=0; i--){
+        for(auto j= (int)multiplier_str.length() - 1; j >=0 ; j--){
             res = (multiplier_str[i] - '0') * (val_str[j] - '0') + carry;
             carry = res/10;
             unit = res%10;
@@ -91,12 +93,14 @@ string MultiplyStrings(string val_str, string multiplier_str){
         else
             output = partial_product_str;
     }
+    if (carry > 0 ) output.insert(0, to_string(carry));
+    cout << "output" << output << endl;
     return output;
 }
 
 
 
-unsigned int CalculateResult(unsigned int value, unsigned int exponent){
+unsigned int LargeNumberCalculator::CalculateResult(unsigned int value, unsigned int exponent){
 
     // Do this via threading later for speed
 
@@ -111,19 +115,11 @@ unsigned int CalculateResult(unsigned int value, unsigned int exponent){
         exponent--;
     }
     cout << "val_str" << val_str << endl;
+    return 3;
 }
 
 
+//
 
-int main(){
-    unsigned int value_a;
-    InputStatus input_status = InputStatus::NO_INPUT;
-    while(input_status != InputStatus::VALID ){
-        DisplayMessage(input_status);
-        input_status = GetInputNumber(value_a);
-    }
-    auto value_b = GetReverseNumber(value_a);
-    const auto value_c = CalculateResult(value_a, value_b);
-    cout << value_c << endl;
-}
+
 
