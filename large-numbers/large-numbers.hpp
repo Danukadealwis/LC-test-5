@@ -14,8 +14,7 @@
             MULTIPLE_INPUTS
         };
 
-        static InputStatus GetInputNumber(unsigned long &input_number);
-        void DisplayMessage(InputStatus input_status);
-        static unsigned long GetReverseNumber(unsigned long number);
+        InputStatus GetInputNumber(unsigned long &input_number);
+        unsigned long GetReverseNumber(unsigned long number);
 //        long SquareAndPrint(const unsigned long &value_a, const unsigned long &value_b);
         unsigned long CalculateResult(unsigned long value, unsigned long exponent);

@@ -2,7 +2,7 @@
 
 using namespace std;
 
-InputStatus GetInputNumber(unsigned long &input_number){
+InputStatus GetInputNumber(unsigned int &input_number){
     char user_input[USER_INPUT_SIZE];
     cin.getline(user_input, USER_INPUT_SIZE);
     auto input_1 = strtok(user_input, " ");
@@ -18,7 +18,7 @@ InputStatus GetInputNumber(unsigned long &input_number){
         if(!isdigit(current_char))
             return InputStatus::INVALID_INPUT;
     }
-    if(!sscanf(input_1, "%lu", &input_number)){
+    if(!sscanf(input_1, "%u", &input_number)){
         return InputStatus::INVALID_INPUT;
     }
     if(input_number < 0 || input_number > 99999){
@@ -30,10 +30,10 @@ InputStatus GetInputNumber(unsigned long &input_number){
 void DisplayMessage(InputStatus input_status){
     switch(input_status){
         case InputStatus::INVALID_INPUT:
-            cout << "Number was invalid" << endl;
+            cout << "Number is invalid" << endl;
             break;
         case InputStatus::OUT_OF_RANGE:
-            cout << "Number was out of range" << endl;
+            cout << "Number is out of range" << endl;
             break;
         case InputStatus::MULTIPLE_INPUTS:
             cout << "There were multiple inputs" << endl;
@@ -44,8 +44,8 @@ void DisplayMessage(InputStatus input_status){
     cout << "Enter a number (0-99999): ";
 }
 
-unsigned long GetReverseNumber(unsigned long number){
-    unsigned long reversed_number = 0, remainder;
+unsigned int GetReverseNumber(unsigned int number){
+    unsigned int reversed_number = 0, remainder;
 
     while(number != 0) {
         remainder = number % 10;
@@ -56,21 +56,67 @@ unsigned long GetReverseNumber(unsigned long number){
     return reversed_number;
 }
 
-unsigned long CalculateResult(unsigned long value, unsigned long exponent){
-    if(exponent == 0) return 1;
-    if(exponent == 1) return value;
-    unsigned long output = value;
-    while (exponent > 1 ) {
-        output *= value;
-        exponent--;
+string AddStrings(string addend_1, string addend_2){
+    string output;
+    unsigned int carry = 0;
+    int i;
+    const auto str_len = addend_1.length() > addend_2.length() ? (int)addend_2.length() : (int)addend_1.length();
+    for(i = str_len - 1; i <= 0; i--){
+        auto res = (addend_1[i] - '0') + (addend_2[i] - '0') + carry;
+        carry = res/10;
+        auto unit = to_string(res%10);
+        output.insert(0, unit);
+    }
+    if(addend_1.length() > addend_2.length())
+        output.insert(0, to_string(carry + (addend_1[0] - '0')));
+    else
+        output.insert(0, to_string(carry));
+}
+
+string MultiplyStrings(string val_str, string multiplier_str){
+    string partial_product_str;
+    unsigned int res,unit,carry = 0;
+    string output("0");
+    int i,j;
+    for(i = (int)multiplier_str.length() - 1; i <=0; i--){
+        for(j= (int)multiplier_str.length() - 1; j <=0 ; j--){
+            res = (multiplier_str[i] - '0') * (val_str[j] - '0') + carry;
+            carry = res/10;
+            unit = res%10;
+            partial_product_str.insert(0, (int)multiplier_str.length() + j - 1 , '0');
+            partial_product_str.insert(0, to_string(unit));
+        }
+        if(output != "0")
+            output = AddStrings(output, partial_product_str);
+        else
+            output = partial_product_str;
     }
     return output;
 }
 
 
 
+unsigned int CalculateResult(unsigned int value, unsigned int exponent){
+
+    // Do this via threading later for speed
+
+    if(exponent == 0) return 1;
+    if(exponent == 1) return value;
+    auto val_str = to_string(value);
+    auto exp_str = to_string(exponent);
+    auto multiplier_str = val_str;
+
+    while (exponent > 1){
+        val_str = MultiplyStrings(val_str, multiplier_str);
+        exponent--;
+    }
+    cout << "val_str" << val_str << endl;
+}
+
+
+
 int main(){
-    unsigned long value_a;
+    unsigned int value_a;
     InputStatus input_status = InputStatus::NO_INPUT;
     while(input_status != InputStatus::VALID ){
         DisplayMessage(input_status);
