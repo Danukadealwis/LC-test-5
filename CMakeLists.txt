@@ -24,12 +24,14 @@ endif()
 
 
 add_executable(large_numbers large-numbers/main.cpp large-numbers/LargeNumbers.hpp large-numbers/LargeNumbers.cpp)
-add_executable(simulated_sensors simulated-sensors/SimulatedSensors.cpp)
+add_executable(simulated_sensors simulated-sensors/SimulatedSensors.cpp simulated-sensors/SimulatedSensors.hpp simulated-sensors/main.cpp)
+add_library(SimulatedSensors simulated-sensors/SimulatedSensors.cpp simulated-sensors/SimulatedSensors.hpp simulated-sensors/main.cpp)
 add_library(LargeNumbers large-numbers/LargeNumbers.cpp large-numbers/LargeNumbers.hpp large-numbers/main.cpp)
 
 # enable compiler warnings
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    target_compile_options(LargeNumbers PUBLIC -Wall -pedantic -Wextra -Werror)
+    target_compile_options(LargeNumbers PUBLIC -pthread -Wall -pedantic -Wextra -Werror )
+    target_compile_options(SimulatedSensors PUBLIC -pthread -Wall -pedantic -Wextra -Werror )
 elseif(MSVC)
     target_compile_options(LargeNumbers PUBLIC /W4 /WX)
 endif()

@@ -11,5 +11,5 @@ int main(){
     }
     auto value_b = largeNumberCalculator.GetReverseNumber(value_a);
     const auto value_c = largeNumberCalculator.CalculateResult(value_a, value_b);
-    cout << value_c << endl;
+    cout << "Result: " << value_a << "^" << value_b << " " << value_c << endl;
 }
