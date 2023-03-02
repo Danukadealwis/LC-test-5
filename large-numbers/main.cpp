@@ -10,6 +10,6 @@ int main(){
         input_status = largeNumberCalculator.GetInputNumber(value_a);
     }
     auto value_b = largeNumberCalculator.GetReverseNumber(value_a);
-    const auto value_c = largeNumberCalculator.CalculateResult(value_a, value_b);
+    const auto value_c = largeNumberCalculator.PowerFunction(value_a, value_b);
     cout << "Result: " << value_a << "^" << value_b << " " << endl << value_c << endl;
 }

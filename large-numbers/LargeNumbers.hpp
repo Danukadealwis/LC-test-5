@@ -20,7 +20,7 @@ namespace LargeNumbers {
             InputStatus GetInputNumber(unsigned int &input_number);
             unsigned int GetReverseNumber(unsigned int number);
             void DisplayMessage(InputStatus input_status);
-            string CalculateResult(unsigned int value, unsigned int exponent);
+            string PowerFunction(unsigned int value, unsigned int exponent);
             string AddStrings(string addend_1, string addend_2);
             string MultiplyStrings(const string &input_1, const string &input_2);
     };

@@ -3,6 +3,7 @@
 using namespace std;
 using namespace LargeNumbers;
 
+
 static void RemoveLeadingZeros(string &str){
     if (str[0] == '0' && str.length() > 1) {
         str.erase(str.begin());
@@ -67,22 +68,28 @@ unsigned int LargeNumberCalculator::GetReverseNumber(unsigned int number){
 string LargeNumberCalculator::AddStrings(string addend_1, string addend_2){
     string output;
     unsigned int carry = 0;
-//    static_assert(addend_1.length() > 0 )
+
     RemoveLeadingZeros(addend_1);
     RemoveLeadingZeros(addend_2);
+
     const auto str_len = addend_1.length() > addend_2.length() ? (int)addend_2.length() : (int)addend_1.length();
+
+    /* Adds values from back of strings to front one by one, maintaining carry. */
     for(auto i = 0; i < str_len; i++){
         auto res = (addend_1[addend_1.length() - i - 1] - '0') + (addend_2[addend_2.length() - i - 1] - '0') + carry;
         carry = res/10;
         auto unit = to_string(res%10);
         output.insert(0, unit);
     }
+
+    /* Recursive function call to add any remaining carry bit */
     if(addend_1.length() > addend_2.length())
         output.insert(0, AddStrings(to_string(carry),(addend_1.substr(0,addend_1.length() - addend_2.length()))));
     else if (addend_1.length() < addend_2.length())
         output.insert(0, AddStrings(to_string(carry),(addend_2.substr(0,addend_2.length() - addend_1.length()))));
     else if(carry > 0)
         output.insert(0, to_string(carry));
+
     return output;
 }
 
@@ -92,17 +99,25 @@ string LargeNumberCalculator::MultiplyStrings(const string &input_1, const strin
     string partial_product_str;
     unsigned int res,unit,carry = 0;
     string output("0");
+
+    /* Multiplier string selected to have the same or less number of digits as value string */
     auto val_str = input_1.length() > input_2.length() ? input_1 : input_2;
     auto multiplier_str = input_1.length() > input_2.length() ? input_2 : input_1;
+
     RemoveLeadingZeros(val_str);
     RemoveLeadingZeros(multiplier_str);
+
+    /* Each digit of the multiplier is multiplied with each digit of the value one by one */
     for(auto i = (int)multiplier_str.length() - 1; i >=0; i--){
         for(auto j= (int)val_str.length() - 1; j >=0 ; j--){
             res = (multiplier_str[i] - '0') * (val_str[j] - '0') + carry;
             carry = res/10;
             unit = res%10;
+
+            /* Add tailing zeroes based on which place the current multiplier is in */
             if (i != (int)val_str.length() - 1 && j == (int)val_str.length() - 1)
                 partial_product_str.insert(0, (int)multiplier_str.length() - i -1 , '0');
+
             partial_product_str.insert(0, to_string(unit));
         }
         partial_product_str.insert(0, to_string(carry));
@@ -119,15 +134,16 @@ string LargeNumberCalculator::MultiplyStrings(const string &input_1, const strin
 
 
 
-string LargeNumberCalculator::CalculateResult(unsigned int value, unsigned int exponent){
-
-    // Do this via threading later for speed
-
+string LargeNumberCalculator::PowerFunction(unsigned int value, unsigned int exponent){
+    
     auto val_str = to_string(value);
     auto exp_str = to_string(exponent);
+    auto output_str = val_str;
+
     if(exponent == 0) return "1";
     if(exponent == 1) return val_str;
-    auto output_str = val_str;
+
+    /* Continue to multiply the values together until the exponent has reduced to 1 */
     while (exponent > 1){
         output_str = MultiplyStrings(val_str, output_str);
         exponent--;

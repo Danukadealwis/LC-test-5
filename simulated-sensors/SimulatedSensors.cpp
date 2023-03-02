@@ -1,10 +1,10 @@
 #include "SimulatedSensors.hpp"
 
 
-static constexpr auto kSensorEmitFrequencyHz = 13;
-static constexpr auto kSensorEmitInterval = chrono::duration<double>(double(1.0f/kSensorEmitFrequencyHz)) ;
-static constexpr auto kSensorShutDownTimeS = 1.5s;
-static constexpr auto kReceiverShutDownTimeS = 200ms;
+static constexpr auto kSensorEmitFrequency_Hz = 10;
+static constexpr auto kSensorEmitInterval_s = chrono::duration<double>(double(1.0f / kSensorEmitFrequency_Hz)) ;
+static constexpr auto kSensorShutDownTime_s = 1.5s;
+static constexpr auto kReceiverShutDownTime_s = 200ms;
 
 static optional<double> measurements[2] = {};
 
@@ -16,10 +16,10 @@ double time_variant_signal(double t_s, int modifier){
 
 void EmitMeasurement(int sensor_number){
 
-    chrono::time_point sensor_timeout_time = start_time + kSensorShutDownTimeS;
+    chrono::time_point sensor_timeout_time = start_time + kSensorShutDownTime_s;
     while (true) {
         unique_lock lk(measurement_sent_mutex);
-        if (cond_var.wait_for(lk,kSensorEmitInterval) == cv_status::timeout){
+        if (cond_var.wait_for(lk, kSensorEmitInterval_s) == cv_status::timeout){
             if(chrono::steady_clock::now() < sensor_timeout_time)
             {
                 auto time = double(chrono::duration_cast<chrono::microseconds>(chrono::steady_clock::now() - start_time).count())/1000000;
@@ -41,8 +41,9 @@ void ReceiveMeasurement(){
     int readings_index = 0;
     while(true){
         unique_lock lk(measurement_sent_mutex);
-        if (cond_var.wait_for(lk,kReceiverShutDownTimeS,[&readings_in_order, &readings_index](){
+        if (cond_var.wait_for(lk, kReceiverShutDownTime_s, [&readings_in_order, &readings_index](){
             return any_of(begin(measurements), end(measurements), [&readings_in_order, &readings_index](optional<double> &measurement)
+            /* Predicate function checks if any of the measurements has a value, then adds it to an array  */
             {if(measurement.has_value()){
                 readings_in_order[readings_index] = measurement;
                 readings_index++;
@@ -61,7 +62,6 @@ void ReceiveMeasurement(){
                 for_each(begin(readings_in_order), end(readings_in_order), [](optional<double> &reading){ reading.reset();});
                 readings_index = 0;
             }
-
             lk.unlock();
             cond_var.notify_all();
         }else{

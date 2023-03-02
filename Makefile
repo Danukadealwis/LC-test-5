@@ -1,5 +1,5 @@
 
-test_large_numbers: build_test run_test
+test_large_numbers: build_test_large_numbers run_test_large_numbers
 
 build_test_large_numbers:
 	cmake -DCMAKE_BUILD_TYPE=Debug . -Bbuild

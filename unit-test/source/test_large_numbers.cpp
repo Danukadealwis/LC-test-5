@@ -4,6 +4,7 @@
 using namespace LargeNumbers;
 TEST_CASE("Test Add Strings"){
     LargeNumberCalculator largeNumberCalculator;
+
     auto output = largeNumberCalculator.AddStrings("123","23");
     CHECK(output == "146");
 
@@ -25,8 +26,10 @@ TEST_CASE("Test Multiply Strings"){
 
     output = largeNumberCalculator.MultiplyStrings("0231","13");
     CHECK(output == "3003");
+
     output = largeNumberCalculator.MultiplyStrings("1228563","548");
     CHECK(output == "673252524");
+
     output = largeNumberCalculator.MultiplyStrings("81","9");
     CHECK(output == "729");
 
@@ -36,16 +39,16 @@ TEST_CASE("Test Multiply Strings"){
 
 TEST_CASE("Test Exponential Arithmetic"){
     LargeNumberCalculator largeNumberCalculator;
-    auto output = largeNumberCalculator.CalculateResult(3,3);
+    auto output = largeNumberCalculator.PowerFunction(3, 3);
     CHECK(output == "27");
 
-    output = largeNumberCalculator.CalculateResult(9,9);
+    output = largeNumberCalculator.PowerFunction(9, 9);
     CHECK(output == "387420489");
 
-    output = largeNumberCalculator.CalculateResult(12,12);
+    output = largeNumberCalculator.PowerFunction(12, 12);
     CHECK(output == "8916100448256");
 
-    output = largeNumberCalculator.CalculateResult(123,321);
+    output = largeNumberCalculator.PowerFunction(123, 321);
     CHECK(output == "72367033806371673149109894141163778628811792657571658906010558390395"
                     "87036379840174409528068615550773640492165707028496172182896059297790"
                     "95426370988976972231026226285667876540913278254539915951402057014129"
@@ -56,6 +59,23 @@ TEST_CASE("Test Exponential Arithmetic"){
                     "86527779813608007416148528042427407693108399448711171956224970254036"
                     "28557129111322659662357543553535167033390430015061185207603595777378"
                     "69472018617942120590873170710805078696371738906375721785723");
+
+}
+
+TEST_CASE("Test Reversing Numbers"){
+    LargeNumberCalculator largeNumberCalculator;
+
+    auto output = largeNumberCalculator.GetReverseNumber(12);
+    CHECK(output == 21);
+
+    output = largeNumberCalculator.GetReverseNumber(23100);
+    CHECK(output == 132);
+
+    output = largeNumberCalculator.GetReverseNumber(999);
+    CHECK(output == 999);
+
+    output = largeNumberCalculator.GetReverseNumber(9400200);
+    CHECK(output == 20049);
 
 }
 
