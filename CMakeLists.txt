@@ -24,6 +24,7 @@ endif()
 
 
 add_executable(large_numbers large-numbers/main.cpp large-numbers/LargeNumbers.hpp large-numbers/LargeNumbers.cpp)
+add_executable(simulated_sensors simulated-sensors/SimulatedSensors.cpp)
 add_library(LargeNumbers large-numbers/LargeNumbers.cpp large-numbers/LargeNumbers.hpp large-numbers/main.cpp)
 
 # enable compiler warnings

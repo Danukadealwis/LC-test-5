@@ -105,13 +105,14 @@ string LargeNumberCalculator::MultiplyStrings(const string &input_1, const strin
                 partial_product_str.insert(0, (int)multiplier_str.length() - i -1 , '0');
             partial_product_str.insert(0, to_string(unit));
         }
+        partial_product_str.insert(0, to_string(carry));
         if(output != "0")
             output = AddStrings(output, partial_product_str);
         else
             output = partial_product_str;
         partial_product_str = "";
+        carry = 0;
     }
-    if (carry > 0 ) output.insert(0, to_string(carry));
     RemoveLeadingZeros(output);
     return output;
 }
