@@ -20,8 +20,8 @@ namespace LargeNumbers {
             InputStatus GetInputNumber(unsigned int &input_number);
             unsigned int GetReverseNumber(unsigned int number);
             void DisplayMessage(InputStatus input_status);
-            unsigned int CalculateResult(unsigned int value, unsigned int exponent);
+            string CalculateResult(unsigned int value, unsigned int exponent);
             string AddStrings(string addend_1, string addend_2);
-            string MultiplyStrings(string val_str, string multiplier_str);
+            string MultiplyStrings(const string &input_1, const string &input_2);
     };
 }
