@@ -1,6 +1,5 @@
 #include "SimulatedSensors.hpp"
 
-using namespace std;
 
 static constexpr auto kSensorEmitFrequencyHz = 13;
 static constexpr auto kSensorEmitInterval = chrono::duration<double>(double(1.0f/kSensorEmitFrequencyHz)) ;
@@ -9,11 +8,8 @@ static constexpr auto kReceiverShutDownTimeS = 200ms;
 
 static optional<double> measurements[2] = {};
 
-const auto start_time = chrono::steady_clock::now();
+static const auto start_time = chrono::steady_clock::now();
 
-mutex measurement_sent_mutex;
-condition_variable cond_var;
-//
 double time_variant_signal(double t_s, int modifier){
     return -(1.0f/16)*(t_s-30+modifier)*sin(t_s)+1;
 }
@@ -43,7 +39,6 @@ void ReceiveMeasurement(){
 
     optional<double> readings_in_order[2];
     int readings_index = 0;
-    //perhaps dont need to make a new array?
     while(true){
         unique_lock lk(measurement_sent_mutex);
         if (cond_var.wait_for(lk,kReceiverShutDownTimeS,[&readings_in_order, &readings_index](){
@@ -75,18 +70,4 @@ void ReceiveMeasurement(){
         }
     }
 }
-
-int main(){
-    thread sensor_0(EmitMeasurement, 0);
-    thread sensor_1(EmitMeasurement, 1);
-    thread receiver(ReceiveMeasurement);
-    sensor_0.join();
-    sensor_1.join();
-    receiver.join();
-    cond_var.notify_all();
-    return 1;
-}
-
-
-
 

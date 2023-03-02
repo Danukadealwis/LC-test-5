@@ -14,14 +14,6 @@ if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
             "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there."
     )
 endif()
-#
-## ---- Add source files ----
-#
-## Note: globbing sources is considered bad practice as CMake's generators may not detect new files
-## automatically. Keep that in mind when changing files, or explicitly mention them here.
-#file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/large-numbers/*.hpp")
-#file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/large-numbers/*.cpp")
-
 
 add_executable(large_numbers large-numbers/main.cpp large-numbers/LargeNumbers.hpp large-numbers/LargeNumbers.cpp)
 add_executable(simulated_sensors simulated-sensors/SimulatedSensors.cpp simulated-sensors/SimulatedSensors.hpp simulated-sensors/main.cpp)
